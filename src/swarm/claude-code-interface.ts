@@ -31,6 +31,7 @@ import {
 } from './types.js';
 
 export interface ClaudeCodeConfig {
+  anthropicBaseUrl?: string;
   claudeExecutablePath: string;
   defaultModel: string;
   maxTokens: number;
@@ -247,6 +248,7 @@ export class ClaudeCodeInterface extends EventEmitter {
           ...process.env,
           ...this.config.environmentVariables,
           ...options.environment,
+          ...(this.config.anthropicBaseUrl ? { ANTHROPIC_BASE_URL: this.config.anthropicBaseUrl } : {}),
         },
         stdio: ['pipe', 'pipe', 'pipe'],
         detached: false,
@@ -1229,6 +1231,7 @@ export class ClaudeCodeInterface extends EventEmitter {
 
   private createDefaultConfig(config: Partial<ClaudeCodeConfig>): ClaudeCodeConfig {
     return {
+      anthropicBaseUrl: process.env.ANTHROPIC_BASE_URL,
       claudeExecutablePath: 'claude',
       defaultModel: 'claude-3-5-sonnet-20241022',
       maxTokens: 4096,
